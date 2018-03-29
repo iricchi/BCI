@@ -3,6 +3,7 @@ close all
 clear all
 clc
 
+
 load('channel_location_16_10-20_mi.mat')
 load('laplacian_16_10-20_mi.mat')
 filename = {};
