@@ -3,14 +3,18 @@ close all
 clear all
 clc
 
-addpath(genpath('biosig'))
-addpath(genpath('eeglab13_4_4b'))
-addpath(genpath('eeglab_current'))
+BCI_folder_path = 'C:\Users\utente\Documents\GitHub\BCI\';
+
+addpath(genpath([BCI_folder_path 'biosig']))
+addpath(genpath([BCI_folder_path 'eeglab13_4_4b']))
+addpath(genpath([BCI_folder_path 'eeglab_current']))
+addpath(genpath([BCI_folder_path 'Flavio']))
+
 
 load('channel_location_16_10-20_mi.mat')
 load('laplacian_16_10-20_mi.mat')
 filename = {};
-subject = 'Ilaria';
+subject = 'Michael';
 %Random Person
 
 switch subject
@@ -27,67 +31,62 @@ switch subject
         filename{4}='aj5.20180320.162133.online.mi.mi_bhbf.ema.gdf';
         filename{5}='aj5.20180320.162724.online.mi.mi_bhbf.ema.gdf';
         filename{6}='aj5.20180320.163515.online.mi.mi_bhbf.ema.gdf';
+        disp('Ilaria data')
     case 'Michael' 
         %Michael
         filename{1}='aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
         filename{2}='aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
         filename{3}='aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
+        disp('Mike data')
+    case 'Flavio'
+        disp('Flavio data')
 end
 %% Defining event types
-FIX = hex2dec('312');
-CUEH = hex2dec('305');
-CUEF = hex2dec('303');
-CONT_FEED = hex2dec('30d');
-BOOM_MISS = hex2dec('381');
-BOOM_HIT = hex2dec('382');
+
+typ = {};
+
+typ.FIX = hex2dec('312');
+typ.CUEH = hex2dec('305');
+typ.CUEF = hex2dec('303');
+typ.CONT_FEED = hex2dec('30d');
+typ.BOOM_MISS = hex2dec('381');
+typ.BOOM_HIT = hex2dec('382');
 
 %% Build event and signal matrix
 
 dur = [];
 pos = [];
-typ = [];
+t = [];
 fileNum = [];
 signals = [];
 
-file_shift = 0;
+file_shift = 0; %Takes account of the sample number in concatenating multiple files
 
-for i=1:3
+for i=1:size(filename,2)
     if i~=1
         file_shift = file_shift + size(s,1);
     end
     [s,h]=sload(filename{i});
     dur = cat(1,dur,h.EVENT.DUR);
     pos = cat(1,pos,h.EVENT.POS + file_shift);
-    typ = cat(1,typ,h.EVENT.TYP);
+    t = cat(1,t,h.EVENT.TYP);
     fileNum = cat(1, fileNum, i*ones(length(h.EVENT.DUR),1));
     signals = cat(1,signals, s);
 end
 
-bigM = cat(2,dur,pos,typ,fileNum);
+bigM = cat(2,dur,pos,t,fileNum);
 sampleRate = h.SampleRate;
-clear dur typ pos fileNum s h i;
+clear dur t pos fileNum s h i fileshift filename;
 
 signals = signals(:,1:16);
 
 %uncomment to visualize eeg signals
 %eegplot(signals') 
 
-%% divide trial by trial and by task
+%% divide trial by trial and by tasks
 
-signalsHand = []; %concatenated signals
-indexH =[];  %final sample of each trial
-signalsFeet = [];
-indexF =[];
-
-for i=1:size(bigM,1)
-    if bigM(i,3) == CUEH
-        signalsHand = cat(1,signalsHand, signals(bigM(i,2):bigM(i+1,2) + bigM(i+1,1),:));
-        indexH = cat(1,indexH,size(signalsHand,1));
-    elseif bigM(i,3) == CUEF
-        signalsFeet = cat(1,signalsFeet, signals(bigM(i,2):bigM(i+1,2) + bigM(i+1,1),:));
-        indexF = cat(1,indexF,size(signalsFeet,1));
-    end
-end
+[signalsHand indexH] = extractSignalsFromCue(signals, bigM, typ.CUEH);
+[signalsFeet indexF] = extractSignalsFromCue(signals, bigM, typ.CUEF);
 
 %% CAR
 
