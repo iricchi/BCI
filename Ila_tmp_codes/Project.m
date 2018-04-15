@@ -4,8 +4,13 @@ clc
 
 %% NB : FOLLOW NOTE : ADD BUTTERWORTH FILTER!!!
 
-addpath(genpath('biosig'))
-addpath(genpath('eeglab_current'))
+BCI_folder_path = 'C:\Users\utente\Documents\GitHub\BCI\';
+
+addpath(genpath([BCI_folder_path 'biosig']))
+addpath(genpath([BCI_folder_path 'eeglab13_4_4b']))
+addpath(genpath([BCI_folder_path 'eeglab_current']))
+addpath(genpath([BCI_folder_path 'Flavio']))
+
 
 % open channel_location and laplacian
 load('laplacian_16_10-20_mi.mat')
@@ -37,16 +42,13 @@ typ = [];
 fileNum = [];
 signals = [];
 
-
 for i = 1:length(filenames)
    [s, h ] = sload(filenames{i});
-       
    dur = [dur; h.EVENT.DUR];
    pos = [pos; h.EVENT.POS];
    typ = [typ; h.EVENT.TYP];
    fileNum = [fileNum; i*ones(length(h.EVENT.DUR),1)];
    signals = [signals; s];
-   
 end
 
 sampleRate = h.EVENT.SampleRate; % it's equal for every file
@@ -72,7 +74,7 @@ EventIds = [CUEF, CUEH, CONT_FEED];
 % Build the Start-Stop Position cell array with information about the Event
 % Id, start/stop pos and indexes on the respected condition of Type ==
 % EventId
-InfoEpoch = BuildEpoch(EventIds, pos,typ, dur, signalsF);
+InfoTrials = BuildTrials(EventIds, pos,typ, dur, signalsF);
 
 % MU AND BETA FREQ 
 
@@ -97,22 +99,23 @@ InfoEpoch = BuildEpoch(EventIds, pos,typ, dur, signalsF);
 
 %% CAR
 
-for i = 1:length(EventIds)
-    boolF(i) = InfoEpoch{i} == CUEF;
-    boolH(i) = InfoEpoch{i} == CUEH;
-end
+signalsFeet = InfoTrials{[InfoTrials{:,1}] == CUEF,5};
+signalsHand = InfoTrials{[InfoTrials{:,1}] == CUEH,5};
 
+% CARFeet = bsxfun(@minus, signalsFeet, mean(signalsFeet,2));
+% CARHand = bsxfun(@minus, signalsHand, mean(signalsHand,2));
 
-signalsFeet = InfoEpoch{find(boolF),5};
-signalsHand = InfoEpoch{find(boolH),5};
-
-CARFeet = bsxfun(@minus, signalsFeet, mean(signalsFeet,2));
-CARHand = bsxfun(@minus, signalsHand, mean(signalsHand,2));
+CARHand = signalsHand - mean(signalsHand,2);
+CARFeet = signalsFeet - mean(signalsFeet,2);
 
 %% Grand Average
 
-%GrandAvgHand = 
+GrandAvgHand = mean(signalsHand,3);
+GrandAvgFeet = mean(signalsFeet,3);
 
+topoplot(mean(signalsHand,1), chanlocs16);
+figure();
+topoplot(mean(signalsFeet,1), chanlocs16);
 
 % LAPLACIAN
 
