@@ -123,7 +123,9 @@ dur_sec = dur/fs ;
 
 
 % Start and Stop Position extraction
+
 EventIds = [CUEF, CUEH, CONT_FEED, FIX];
+
 
 % Build the Start-Stop Position cell array with information about the Event
 % Id, start/stop pos and indexes on the respected condition of Type ==
@@ -140,6 +142,7 @@ InfoTrials = BuildTrials(EventIds, pos,typ, dur, signalsF);
 GrandAvgHand = mean(signalsHand,3);
 GrandAvgFeet = mean(signalsFeet,3);
 
+figure();
 topoplot(mean(signalsHand,1), chanlocs16);
 figure();
 topoplot(mean(signalsFeet,1), chanlocs16);
