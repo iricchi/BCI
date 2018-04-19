@@ -6,10 +6,8 @@ clc
 
 BCI_folder_path = 'C:\Users\utente\Documents\GitHub\BCI\';
 
-addpath(genpath([BCI_folder_path 'biosig']))
-addpath(genpath([BCI_folder_path 'eeglab13_4_4b']))
-addpath(genpath([BCI_folder_path 'eeglab_current']))
-addpath(genpath([BCI_folder_path 'Flavio']))
+addpath(genpath('biosig'))
+addpath(genpath('eeglab_current'))
 
 
 % open channel_location and laplacian
@@ -103,8 +101,8 @@ InfoTrials = BuildTrials(EventIds, pos,typ, dur, signalsF);
 signalsFeet = InfoTrials{[InfoTrials{:,1}] == CUEF,5};
 signalsHand = InfoTrials{[InfoTrials{:,1}] == CUEH,5};
 
-% CARFeet = bsxfun(@minus, signalsFeet, mean(signalsFeet,2));
-% CARHand = bsxfun(@minus, signalsHand, mean(signalsHand,2));
+%CARFeet = bsxfun(@minus, signalsFeet, mean(signalsFeet,2));
+%CARHand = bsxfun(@minus, signalsHand, mean(signalsHand,2));
 
 CARHand = signalsHand - mean(signalsHand,2);
 CARFeet = signalsFeet - mean(signalsFeet,2);
