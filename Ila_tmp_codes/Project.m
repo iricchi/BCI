@@ -69,7 +69,7 @@ fvtool(b,a)
 signalsF = filter(b,a,signals);
 
 % Start and Stop Position extraction
-EventIds = [CUEF, CUEH, CONT_FEED];
+EventIds = [FIX, CUEF, CUEH, CONT_FEED];
 
 % Build the Start-Stop Position cell array with information about the Event
 % Id, start/stop pos and indexes on the respected condition of Type ==
@@ -113,6 +113,7 @@ CARFeet = signalsFeet - mean(signalsFeet,2);
 GrandAvgHand = mean(signalsHand,3);
 GrandAvgFeet = mean(signalsFeet,3);
 
+figure();
 topoplot(mean(signalsHand,1), chanlocs16);
 figure();
 topoplot(mean(signalsFeet,1), chanlocs16);

@@ -9,7 +9,7 @@ function [ InfoTrials ] = BuildTrials( EventIds, Pos, Typ, Dur, Sig)
         durs = unique(Dur(InfoTrials{i,2}));
         Duration = min(durs); %choose the minimum duration of the trial
         InfoTrials{i,4} = InfoTrials{i,3} + Duration - 1; % Stop Pos because MATLAB
-                                                        % start from 1
+                                                          % start from 1
         %Signals splitting
         NumTrials = length(InfoTrials{i,3});
         NumChannels = 16;
