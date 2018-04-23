@@ -21,6 +21,12 @@ filename3 = 'anonymous.20170613.162934.offline.mi.mi_bhbf.gdf';
 %filename4 = 'anonymous.20170613.170929.online.mi.mi_bhbf.ema.gdf'; % this
 %is online 
 
+% MIKE FAI IL CICLO
+[s, h] = sload(filename1);
+signals = s(:,1:end-1); % Let's consider only the 16 channels
+
+fs = h.SampleRate;
+
 %% Defining event types
 FIX = hex2dec('312');
 CUEH = hex2dec('305');
@@ -29,7 +35,61 @@ CONT_FEED = hex2dec('30d');
 BOOM_MISS = hex2dec('381');
 BOOM_HIT = hex2dec('382');
 
-%% Build event and signal matrix
+
+
+%% SPATIAL FILTERING
+sfilter = 'CAR' ; % Lap, BigLap
+
+switch sfilter
+    
+    case 'CAR'
+        signalsF = bsxfun(@minus, signals, mean(signals, 2));
+       %  signalsF = signals - mean(signals,2);
+    case 'Lap'
+        
+        
+    case 'BigLap'
+        
+end
+
+%% Power Specrtal Density PSD - pwelch
+
+nCh = length(chanlocs16);
+
+duration = 1;
+shift = 0.0625;
+
+start = 1:fs*shift:length(signals)-fs*duration;
+stop = duration*fs:fs*shift:length(signals); 
+f_interest = 4:2:48;
+
+window = fs*duration;
+overlap = shift*fs;
+
+
+PSD_perfile = zeros(length(start),length(f_interest),16);
+for i = 1:length(start)    
+    [PSD_perfile(i,:,:),f] = pwelch(signalsF(start(i):stop(i),:), window,overlap,f_interest,512);
+end
+
+% CONCATENARE PSD
+
+% FARE PLOOOTT 
+
+% CONTROLLARE SQUEEZE
+
+% FARE SPETTROGRAMMA PER CANALE: FREQ IN FUNZIONE DEL TEMPO (SAMPLES/fs)
+
+% plot SPECTRAL DENSITY PER CHANNEL
+
+% EXTRACTION OF CUES AND FIXATION
+% NORMALIZE WITH RESPECT TO REST : A - R / R
+
+% GRAND AVARAGE AND TOPOPLOT!!
+
+
+
+%% Build event and signal matrix EEG
 % keep track of the label to the file they come from
 % take only the offline event so the first 3 files
 
@@ -49,8 +109,7 @@ for i = 1:length(filenames)
    signals = [signals; s];
 end
 
-sampleRate = h.EVENT.SampleRate; % it's equal for every file
-
+fs = h.EVENT.SampleRate; % the sample rate is equal for every file
 signals = signals(:,1:end-1); % Let's consider only the 16 channels
 clear i s h
 
@@ -58,17 +117,15 @@ clear i s h
 eegplot(signals')
 
 % Divde the duration by the SAMPLE RATE to have the duration in seconds
-dur_sec = dur/sampleRate ;
+dur_sec = dur/fs ;
 
-%% FILTER (Butterworth)
+%% EXTRACTION
 
-[b,a] = butter(2, [8 12]/512/2); % take the sample frequency and devide by 2
-fvtool(b,a)
-signalsF = filter(b,a,signals);
 
 % Start and Stop Position extraction
 
 EventIds = [CUEF, CUEH, CONT_FEED, FIX];
+
 
 % Build the Start-Stop Position cell array with information about the Event
 % Id, start/stop pos and indexes on the respected condition of Type ==
@@ -78,34 +135,7 @@ InfoTrials = BuildTrials(EventIds, pos,typ, dur, signalsF);
 % MU AND BETA FREQ 
 
 
-%% SPATIAL FILTERING
-% Ear Ref: Use a reference electrode
-% CAR : remove the spread activity in the skull 
-% we need only a snapshot , take the avarage of each electrode and subtract
-% that 
-% Laplacian : take the weighted avarage subtracting that from the cross in
-% the neighborhood. 16 electrods and matrix moltiplication
 
-% band pass filter and then grand avarage
-% you can also extract the power and a moving avarage to visualize the
-% power and log of the power
-% CAR APPLICATION
-
-% PLOT the single electrode power thanks to the band filter and see the
-% power for different 2 class
-
-% topopplot
-
-%% CAR
-
-signalsFeet = InfoTrials{[InfoTrials{:,1}] == CUEF,5};
-signalsHand = InfoTrials{[InfoTrials{:,1}] == CUEH,5};
-
-%CARFeet = bsxfun(@minus, signalsFeet, mean(signalsFeet,2));
-%CARHand = bsxfun(@minus, signalsHand, mean(signalsHand,2));
-
-CARHand = signalsHand - mean(signalsHand,2);
-CARFeet = signalsFeet - mean(signalsFeet,2);
 
 %% Grand Average
 
@@ -116,14 +146,5 @@ figure();
 topoplot(mean(signalsHand,1), chanlocs16);
 figure();
 topoplot(mean(signalsFeet,1), chanlocs16);
-
-% LAPLACIAN
-
-% pweltch function: takes the signal, split it in windows also overlapping,
-% hamming windows and compute the FFT and avarage the 8 overlapping window.
-
-% apply this pcd
-% adjust the events position ?? what does it mean? 
-% Start from the windowing -> if an event follow the window 
 
 
