@@ -1,4 +1,4 @@
-function [ offline_names, online_names ] = extractOffOnLineFileNames( subject, parent_folder )
+function [ offline_names, online_names ] = getFileNamesFromDir( subject, parent_folder )
 %extraction of the filenames for the corrisponding subject
 
     signal_folder_online = [parent_folder, '\Signals\online'];

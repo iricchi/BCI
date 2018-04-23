@@ -1,0 +1,31 @@
+clear all
+close all
+clc
+%% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
+subject = 'Flavio';
+
+%% Loading functions
+parent_folder = fileparts(pwd);
+
+addpath(genpath([parent_folder, '\biosig']));
+addpath(genpath([parent_folder, '\eeglab_current']));
+addpath(genpath([parent_folder, '\eeglab13_4_4b']));
+
+load([parent_folder, '\VariousData','\channel_location_16_10-20_mi.mat']);
+load([parent_folder, '\VariousData','\laplacian_16_10-20_mi.mat']);
+%% Loading signals
+[ offline_names, online_names ] = getFileNamesFromDir( subject , parent_folder);
+
+%% Extracting signals from files
+
+signals_offline = cell(numel(offline_names),1);
+signals_online  = cell(numel(online_names),1);
+
+for i = 1:numel(online_names)
+    signals_online{i}  = extractSignalsFromFileName(online_names{i}, parent_folder, 'online');
+end
+
+for i = 1:numel(offline_names)
+    signals_offline{i} = extractSignalsFromFileName(offline_names{i}, parent_folder, 'offline');
+end
+
