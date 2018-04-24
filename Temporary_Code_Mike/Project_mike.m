@@ -32,7 +32,7 @@ filename{3} = 'anonymous.20170613.162934.offline.mi.mi_bhbf.gdf';
 % filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
 % filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
 % filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
-% 
+% % 
 number_of_files = 3;
 
 signals = cell(number_of_files,1);
@@ -204,23 +204,26 @@ mean_R = squeeze(mean(R));
 ERD_foot = (100*((log10(mean_A_foot) - log10(mean_R))))./ mean_R;
 ERD_hand = (100*(log10(mean_A_hand) - log10(mean_R)))./ mean_R;
 
-ERD_foot_interest = ERD_foot(1:6,:);
-ERD_hand_interest = ERD_hand(1:6,:);
+ERD_foot_interest = ERD_foot(1:5,:);
+ERD_hand_interest = ERD_hand(1:5,:);
 
+conc = [ERD_foot_interest;ERD_hand_interest];
+minimum = min(conc(:));
+maximum = max(conc(:));
 figure
-imagesc(ERD_foot_interest')
+imagesc(ERD_foot_interest',[minimum,maximum])
 % xticks(1:23)
 % xticklabels(num2cell(4:2:48))
 
 figure
-imagesc(ERD_hand_interest')
+imagesc(ERD_hand_interest',[minimum, maximum])
 % xticks(1:23)
 % xticklabels(num2cell(4:2:48))
 
 
 %% Topoplot
-for_topoplotF = squeeze(mean(ERD_foot(2:4,:),1));
-for_topoplotH = squeeze(mean(ERD_hand(2:4,:),1));
+for_topoplotF = squeeze(mean(ERD_foot(4,:),1));
+for_topoplotH = squeeze(mean(ERD_hand(4,:),1));
 
 figure
 topoplot(for_topoplotF,chanlocs16);
