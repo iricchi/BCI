@@ -13,6 +13,15 @@ addpath(genpath('eeglab_current'))
 % open channel_location and laplacian
 load('laplacian_16_10-20_mi.mat')
 load('channel_location_16_10-20_mi.mat')
+%% Defining event types
+global FIX CUEH CUEF CONT_FEED BOOM_MISS BOOM_HIT
+
+FIX = hex2dec('312');%786
+CUEH = hex2dec('305'); %773
+CUEF = hex2dec('303'); %771
+CONT_FEED = hex2dec('30d'); %781
+BOOM_MISS = hex2dec('381');
+BOOM_HIT = hex2dec('382');
 
 %% READ FILE
 filename{1} = 'anonymous.20170613.161402.offline.mi.mi_bhbf.gdf';
@@ -20,7 +29,10 @@ filename{2} = 'anonymous.20170613.162331.offline.mi.mi_bhbf.gdf';
 filename{3} = 'anonymous.20170613.162934.offline.mi.mi_bhbf.gdf';
 %filename{4} = 'anonymous.20170613.170929.online.mi.mi_bhbf.ema.gdf'; % this
 %is online 
-
+% filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
+% filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
+% filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
+% 
 number_of_files = 3;
 
 signals = cell(number_of_files,1);
@@ -33,14 +45,6 @@ for i = 1 : number_of_files
     
 end
 fs = h{1}.SampleRate;
-
-%% Defining event types
-FIX = hex2dec('312');
-CUEH = hex2dec('305');
-CUEF = hex2dec('303');
-CONT_FEED = hex2dec('30d');
-BOOM_MISS = hex2dec('381');
-BOOM_HIT = hex2dec('382');
 
 
 
@@ -59,7 +63,9 @@ switch sfilter
 
     case 'Lap'
         
-        
+        for i = 1:number_of_files
+            signalsF{i} = bsxfun(@minus, signals{i}, signals{i}*lap);
+        end
     case 'BigLap'
         
 end
@@ -170,7 +176,7 @@ end
 
 
 % Start and Stop Position extraction
-
+%get_feed(InfoTrials,'hands');
 EventIds = [CUEF, CUEH, CONT_FEED, FIX];
 
 
@@ -179,26 +185,46 @@ EventIds = [CUEF, CUEH, CONT_FEED, FIX];
 % EventId
 InfoTrials = BuildTrialsMike(EventIds, pos,typ, dur, power);
 
-clearvars -except InfoTrials
-
+clearvars -except InfoTrials lap chanlocs16
 %% Grand Averages
 
-% A_foot = squeeze(mean(mean_cell(InfoTrials{3,5}),1));
-% baseline = InfoTrials{4,5}(1:90);
-% R =  squeeze(mean(mean_cell(baseline),1));
-% A_hands  = squeeze(mean(mean_cell(InfoTrials{
-% ERD_foot = (100*(log10(A_foot) - log10(R)))./ R;
-% ERD_hands  =
-% imagesc(ERD_foot', [min(ERD_foot(:)),max(ERD_foot(:))])
-% 
-%% Grand Average
 
-% GrandAvgHand = mean(signalsHand,3);
-% GrandAvgFeet = mean(signalsFeet,3);
-% 
-% figure();
-% topoplot(mean(signalsHand,1), chanlocs16);
-% figure();
-% topoplot(mean(signalsFeet,1), chanlocs16);
-% 
-% 
+foot_feed = extract_signal(InfoTrials,2);
+hand_feed = extract_signal(InfoTrials,3);
+
+A_foot = mean_cell(foot_feed,0);
+A_hand = mean_cell(hand_feed,0);
+R =  mean_cell(InfoTrials{4,5},0);
+
+mean_A_foot = squeeze(mean(A_foot));
+mean_A_hand = squeeze(mean(A_hand));
+
+mean_R = squeeze(mean(R));
+
+ERD_foot = (100*((log10(mean_A_foot) - log10(mean_R))))./ mean_R;
+ERD_hand = (100*(log10(mean_A_hand) - log10(mean_R)))./ mean_R;
+
+ERD_foot_interest = ERD_foot(1:6,:);
+ERD_hand_interest = ERD_hand(1:6,:);
+
+figure
+imagesc(ERD_foot_interest')
+% xticks(1:23)
+% xticklabels(num2cell(4:2:48))
+
+figure
+imagesc(ERD_hand_interest')
+% xticks(1:23)
+% xticklabels(num2cell(4:2:48))
+
+
+%% Topoplot
+for_topoplotF = squeeze(mean(ERD_foot(2:4,:),1));
+for_topoplotH = squeeze(mean(ERD_hand(2:4,:),1));
+
+figure
+topoplot(for_topoplotF,chanlocs16);
+
+figure
+topoplot(for_topoplotH,chanlocs16);
+

@@ -1,6 +1,6 @@
 function [ InfoTrials ] = BuildTrialsMike( EventIds, Pos, Typ, Dur, Sig)
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+
+    global CUEH CUEF
 
     for i = 1:length(EventIds)
         InfoTrials{i,1} = EventIds(i);
@@ -25,12 +25,22 @@ function [ InfoTrials ] = BuildTrialsMike( EventIds, Pos, Typ, Dur, Sig)
         InfoTrials{i,5} = Trials;
     end
     
-  
+    flags_hand = get_event_flags(length(InfoTrials{1,2}), CUEH,InfoTrials);
+    flags_foot = get_event_flags(length(InfoTrials{1,2}), CUEF,InfoTrials);
+    
+    InfoTrials{3,5}(:,2) = num2cell(flags_hand);
+    InfoTrials{3,5}(:,3) = num2cell(flags_foot);
+
     InfoTrials{length(EventIds)+1,1} = 'EventID';
     InfoTrials{length(EventIds)+1,2} = 'FlagEvent';
     InfoTrials{length(EventIds)+1,3} = 'StartPosition';
     InfoTrials{length(EventIds)+1,4} = 'StopPosition';
     InfoTrials{length(EventIds)+1,5} = 'Signals';
+    
+    len = length(InfoTrials{3,5});
+    InfoTrials{3,5}(len+1,1) = cellstr('Signal');
+    InfoTrials{3,5}(len+1,2) =cellstr('Han1dFlag');
+    InfoTrials{3,5}(len+1,3) = cellstr('FootFlag');
 
 
 end
