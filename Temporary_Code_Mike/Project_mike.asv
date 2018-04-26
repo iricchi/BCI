@@ -34,9 +34,9 @@ patient_name =  'anonymous';
 %is online 
 
 %MICHAEL
-% filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
-% filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
-% filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
+filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
+filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
+filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
 
 %FLAVIO
 % filename{1} = 'aj4.20180313.151634.offline.mi.mi_bhbf.gdf';
@@ -45,9 +45,9 @@ patient_name =  'anonymous';
 
 %ILARIA
 
-filename{1} = 'aj5.20180320.154811.offline.mi.mi_bhbf.gdf';
-filename{2} = 'aj5.20180320.155701.offline.mi.mi_bhbf.gdf';
-filename{3} = 'aj5.20180320.160549.offline.mi.mi_bhbf.gdf';
+% filename{1} = 'aj5.20180320.154811.offline.mi.mi_bhbf.gdf';
+% filename{2} = 'aj5.20180320.155701.offline.mi.mi_bhbf.gdf';
+% filename{3} = 'aj5.20180320.160549.offline.mi.mi_bhbf.gdf';
 
 
 number_of_files = 3;
@@ -171,12 +171,6 @@ EventIds = [CUEF, CUEH, CONT_FEED, FIX];
 % EventId
 InfoTrials = BuildTrialsMike(EventIds, pos,typ, dur, power);
 
-namefile = (sprintf('InfoTrial_%s.mat',patient_name));
-
-if  ~exist(namefile,'file')
-    save(namefile, 'InfoTrials');
-end
-
 %clearvars -except InfoTrials lap chanlocs16 power patient_name
 %% Grand Averages
 
@@ -193,32 +187,51 @@ mean_A_hand = squeeze(mean(A_hand));
 
 mean_R = squeeze(mean(R));
 
-mean_ERD_foot = 100*((log10(mean_A_foot) - log10(mean_R)))./ (mean_R);
-mean_ERD_hand = 100*(log10(mean_A_hand) - log10(mean_R))./ (mean_R);
+mean_ERD_foot = (100*((log10(mean_A_foot) - log10(mean_R))))./ log10(mean_R);
+mean_ERD_hand = (100*(log10(mean_A_hand) - log10(mean_R)))./ log10(mean_R);
 
 ERD_foot_interest = mean_ERD_foot(1:5,:);
 ERD_hand_interest = mean_ERD_hand(1:5,:);
 
+conc = [ERD_foot_interest;ERD_hand_interest];
+minimum = min(conc(:));
+maximum = max(conc(:));
+figure
+imagesc(ERD_foot_interest',[minimum,maximum])
+% xticks(1:23)
+% xticklabels(num2cell(4:2:48))
 
+figure
+imagesc(ERD_hand_interest',[minimum, maximum])
+% xticks(1:23)
+% xticklabels(num2cell(4:2:48))
    
+namefile = (sprintf('InfoTrial_%s.mat',patient_name));
 
+if  ~exist(namefile,'file')
+    save(namefile, 'InfoTrials');
+end
 %% Spectrogram
 
     %% Topoplot
-for_topoplotF = squeeze(mean(mean_ERD_foot(3:5,:),1));
-for_topoplotH = squeeze(mean(mean_ERD_hand(3:5,:),1));
+for_topoplotF = squeeze(mean(mean_ERD_foot(4:5,:),1));
+for_topoplotH = squeeze(mean(mean_ERD_hand(4:5,:),1));
 
 whole = [for_topoplotF for_topoplotH];
-minimum = min(whole(:));
+minimum = min(whole);
 maximum = max(whole(:));
 
 
 figure
-topoplot(for_topoplotF,chanlocs16,'maplimits',[minimum,maximum],'electrodes','labels','conv','off');
+topoplot(for_topoplotF,chanlocs16,'maplimits',[minimum,maximum],'electrodes','labels');
 figure
 topoplot(for_topoplotH,chanlocs16,'maplimits',[minimum,maximum],'electrodes','labels');
 
-% figure
-% topoplot(for_topoplotH - for_topoplotF,chanlocs16,'maplimits','maxmin','electrodes','labels');
-% 
+figure
+topoplot(for_topoplotH - for_topoplotF,chanlocs16,'maplimits','maxmin','electrodes','labels');
 
+%% MEGAPLOT
+
+power_for_plot = power(:,:,9)';
+figure()
+imagesc(log(power_for_plot))
