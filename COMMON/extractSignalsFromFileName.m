@@ -1,4 +1,4 @@
-function [ signals, sample_frequency ] = extractSignalsFromFileName( filename, parent_dir, type )
+function [ signals, flags ] = extractSignalsFromFileName( filename, parent_dir, type )
 %   
 %   type can be 'online' or 'offline'
 %
@@ -21,7 +21,7 @@ function [ signals, sample_frequency ] = extractSignalsFromFileName( filename, p
     
     signals = s(:,1:end-1); % Let's consider only the 16 channels
 
-    sample_frequency = h.SampleRate;
+    flags = h;
     
 end
 
