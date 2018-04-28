@@ -13,7 +13,7 @@ function [ signals, flags ] = extractSignalsFromFileName( filename, parent_dir, 
     
     filedir = [parent_dir, '\Signals\' , type, '\', filename];
 
-    if exist(filedir, 'file') ~= 2
+    if ~exist(filedir, 'file')
         error('file not found');
     end
     
@@ -22,6 +22,6 @@ function [ signals, flags ] = extractSignalsFromFileName( filename, parent_dir, 
     signals = s(:,1:end-1); % Let's consider only the 16 channels
 
     flags = h;
-    
+        
 end
 

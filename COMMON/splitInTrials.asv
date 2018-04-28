@@ -1,0 +1,24 @@
+function [ events_trialed ] = splitInTrials( events, trial_flags )
+% Takes in the concatenated signals of same type events and re arrange them
+% adding one extra dimension that accounts for the trial the signal is in:
+% example input : fixation windows concatenated: dim[windows, freq, chs]
+%                 flags telling which window belongs to which trial
+% example output: same signals but one dimension to describe the trial#
+%                 the trial length is set as the minimum legth along the
+%                 trials, dim[#trials, windows, freq, chs]
+
+
+    %compute minimum trial lenght to extract them all of the same size
+min_tr_lenght = min(sum(fixations_flags(:) == unique(fixations_flags)'));
+
+%fixations_mat dimensions: [n_trial, windows, freq, ch]
+fixations_mat = nan(length(unique(fixations_flags)),min_tr_lenght, size(fixations,2), size(fixations,3));
+
+for i=1:length(unique(fixations_flags))
+   idx = find(fixations_flags == i);
+   fixations_mat(i,:,:,:) = fixations(idx(1:min_tr_lenght),:,:); 
+end
+
+
+end
+
