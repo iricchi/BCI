@@ -70,6 +70,19 @@ avg_feet_trial = cat(1,avg_fixation,avg_feet);
 
 %% Spectrogram
 
-imagesc(log(avg_hands_trial(:,:,10)'));
+%trying to standardize with respect to the fixation
+avg_fixation_m   = mean(avg_fixation,1); 
+avg_fixation_std =  std(avg_fixation,1);
+
+avg_fixation_n = (avg_fixation - avg_fixation_m)./avg_fixation_std;
+avg_hands_n    = (avg_hands    - avg_fixation_m)./avg_fixation_std;
+avg_feet_n     = (avg_feet     - avg_fixation_m)./avg_fixation_std;
+
+avg_hands_trial_n = cat(1,avg_fixation_n,avg_hands_n);
+avg_feet_trial_n  = cat(1,avg_fixation_n,avg_feet_n );
+
+
 figure
-imagesc(log(avg_feet_trial(:,:,10)'));
+limits = plot_spectrogram(avg_hands_trial_n, 8 ,'on');
+figure
+plot_spectrogram(avg_feet_trial_n, 8, 'on', limits );

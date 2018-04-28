@@ -69,3 +69,13 @@ avg_feet_trial = cat(1,avg_fixation,avg_feet);
 
 
 %% Spectrogram
+
+avg_fixation_m   = mean(avg_fixation,1); 
+avg_fixation_std =  std(avg_fixation,1);
+
+avg_fixation_n = (avg_fixation - avg_fixation_m)./avg_fixation_std;
+
+figure
+plot_spectrogram(avg_hands_trial, 8);
+figure
+plot_spectrogram(avg_feet_trial, 8);
