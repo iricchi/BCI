@@ -34,9 +34,9 @@ patient_name =  'anonymous';
 %is online 
 
 %MICHAEL
-% filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
-% filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
-% filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
+filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
+filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
+filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
 
 %FLAVIO
 % filename{1} = 'aj4.20180313.151634.offline.mi.mi_bhbf.gdf';
@@ -44,10 +44,10 @@ patient_name =  'anonymous';
 % filename{3} = 'aj4.20180313.153339.offline.mi.mi_bhbf.gdf';
 
 %ILARIA
-
-filename{1} = 'aj5.20180320.154811.offline.mi.mi_bhbf.gdf';
-filename{2} = 'aj5.20180320.155701.offline.mi.mi_bhbf.gdf';
-filename{3} = 'aj5.20180320.160549.offline.mi.mi_bhbf.gdf';
+% 
+% filename{1} = 'aj5.20180320.154811.offline.mi.mi_bhbf.gdf';
+% filename{2} = 'aj5.20180320.155701.offline.mi.mi_bhbf.gdf';
+% filename{3} = 'aj5.20180320.160549.offline.mi.mi_bhbf.gdf';
 
 
 number_of_files = 3;
@@ -205,8 +205,8 @@ ERD_hand_interest = mean_ERD_hand(1:5,:);
 %% Spectrogram
 
     %% Topoplot
-for_topoplotF = squeeze(mean(mean_ERD_foot(3:5,:),1));
-for_topoplotH = squeeze(mean(mean_ERD_hand(3:5,:),1));
+for_topoplotF = squeeze(mean(mean_ERD_foot(5:6,:),1));
+for_topoplotH = squeeze(mean(mean_ERD_hand(5:6,:),1));
 
 whole = [for_topoplotF for_topoplotH];
 minimum = min(whole(:));
@@ -214,9 +214,9 @@ maximum = max(whole(:));
 
 
 figure
-topoplot(for_topoplotF,chanlocs16,'maplimits',[minimum,maximum],'electrodes','labels','conv','off');
+topoplot(for_topoplotF,chanlocs16,'electrodes','labels');
 figure
-topoplot(for_topoplotH,chanlocs16,'maplimits',[minimum,maximum],'electrodes','labels');
+topoplot(for_topoplotH,chanlocs16,'electrodes','labels');
 
 % figure
 % topoplot(for_topoplotH - for_topoplotF,chanlocs16,'maplimits','maxmin','electrodes','labels');
