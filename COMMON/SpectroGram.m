@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Mike';
+subject = 'Anon';
 
 %% Defining event types
 global cueType
@@ -81,8 +81,44 @@ avg_feet_n     = (avg_feet     - avg_fixation_m)./avg_fixation_std;
 avg_hands_trial_n = cat(1,avg_fixation_n,avg_hands_n);
 avg_feet_trial_n  = cat(1,avg_fixation_n,avg_feet_n );
 
+figure()
+subplot(3,5,1);
+limits = plot_spectrogram(avg_feet_trial_n, 2 , params, 'logOff');
+title(['PSDFeet norm ch: ', num2str(2)]);
 
-figure
-limits = plot_spectrogram(avg_hands_trial_n, 8 ,'on');
-figure
-plot_spectrogram(avg_feet_trial_n, 8, 'on', limits );
+for ch = 3:params.nCh
+    subplot(3,5,ch-1);
+    plot_spectrogram(avg_feet_trial_n, ch, params, 'logOff', limits );
+    title(['PSDFeet norm ch: ', num2str(ch)]);
+end
+
+figure()
+
+for ch = 2:params.nCh
+    subplot(3,5,ch-1);
+    plot_spectrogram(avg_hands_trial_n, ch, params,'logOff', limits );
+    title(['PSDHands norm ch: ', num2str(ch)]);
+end
+
+
+%plot without normalization
+
+figure()
+subplot(3,5,1);
+limits = plot_spectrogram(avg_feet_trial, 2 , params, 'logOn');
+title(['PSDFeet ch: ', num2str(2)]);
+
+for ch = 3:params.nCh
+    subplot(3,5,ch-1);
+    plot_spectrogram(avg_feet_trial, ch, params, 'logOn' , limits);
+    title(['PSDFeet ch: ', num2str(ch)]);
+end
+
+figure()
+
+for ch = 2:params.nCh
+    subplot(3,5,ch-1);
+    plot_spectrogram(avg_hands_trial, ch, params, 'logOn' , limits);
+    title(['PSDHands ch: ', num2str(ch)]);
+end
+
