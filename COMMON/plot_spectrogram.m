@@ -1,4 +1,5 @@
 function [minmax]  = plot_spectrogram(signal, channel, PSDparams, log, minmax)
+
 % Plot the spectrogram of the signal for the given channel. Pass signal
 % only as 3D matrices [Nwindows x Nfreq x Nchannels)
 %If freq is not given it will assume it goes from 4 to 48 with step 2.
@@ -11,6 +12,7 @@ end
 
 if  ~exist('minmax','var') || isempty(minmax)
     minmax = [min(signal(:)) max(signal(:))];
+
 end
 
 signal = flip(signal,2);
