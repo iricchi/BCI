@@ -24,7 +24,7 @@ BOOM_MISS = hex2dec('381');
 BOOM_HIT = hex2dec('382');
 %% READ FILE
 
-patient_name =  'anonymous';
+patient_name =  'Mike';
 
 %ANONYMOUS
 % filename{1} = 'anonymous.20170613.161402.offline.mi.mi_bhbf.gdf';
