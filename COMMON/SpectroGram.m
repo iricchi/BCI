@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Mike';
+subject = 'Anon';
 
 %% Defining event types
 global cueType
@@ -83,6 +83,6 @@ avg_feet_trial_n  = cat(1,avg_fixation_n,avg_feet_n );
 
 
 figure
-limits = plot_spectrogram(avg_hands_trial_n, 8 ,'on');
+plot_spectrogram(avg_hands_trial, 8 ,params);
 figure
-plot_spectrogram(avg_feet_trial_n, 8, 'on', limits );
+plot_spectrogram(avg_feet_trial, 8,params);
