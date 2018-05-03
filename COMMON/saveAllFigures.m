@@ -5,9 +5,11 @@ function [] = saveAllFigures()
     FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
     
     for iFig = 1:length(FigList)
-      FigHandle = FigList(iFig);
+      
+        FigHandle = FigList(iFig);
       FigName   = get(FigHandle, 'Name');
-      print('-fillpage',[FolderName,'\',FigName],'-dpdf');
+      
+      saveas(FigHandle,[FolderName,'\',FigName,'.png']);
     end
     
 end

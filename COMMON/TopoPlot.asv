@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Anon';
+subject = 'Mike';
 sfilter = 'Lap';
 %% Defining event types
 global cueType
@@ -43,15 +43,36 @@ feetPSD = PSDoff(flags.cues == cueType.CUEF | flags.cues == cueType.FEED_F,:,:);
 handsPSD = PSDoff(flags.cues == cueType.CUEH | flags.cues == cueType.FEED_H,:,:);
 baseline = PSDoff(flags.cues == cueType.FIX ,:,:);
 
+% feet_flags = flags.abstrial( flags.cues == cueType.CUEF | flags.cues == cueType.FEED_F);
+% hands_flags = flags.abstrial( flags.cues == cueType.CUEH | flags.cues == cueType.FEED_H);
 
-%% Compute the mean along all windows and the mean ERD 
+% hands_mat = splitInTrials(handsPSD, hands_flags);
+% foot_mat = splitInTrials(feetPSD, hands_flags);
+
+% avg_hand = squeeze(mean(hands_mat,1));
+% avg_foot = squeeze(mean(foot_mat,1));
+% mean_avg_hand = squeeze(mean(avg_hand,1));
+% mean_avg_foot = squeeze(mean(avg_foot,1));
+
+%%
 
 mean_base  = squeeze(mean(baseline,1));
 mean_feet  = squeeze(mean(feetPSD,1));
 mean_hands = squeeze(mean(handsPSD,1));
 
-mean_ERD_feet = computeERD(mean_feet,mean_base);
-mean_ERD_hands = computeERD(mean_hands,mean_base);
+ERDfoot = computeERD(footPSD,baseline);
+ERDhand = computeERD(handPSD,baseline);
+
+%Average ERD along all trials
+
+% mean_ERDfoot = squeeze(mean(ERDfoot,1));
+% mean_ERDhand = squeeze(mean(ERDhand,1));
+
+mean_foot = (squeeze(mean(feetPSD,1)));
+mean_hand =(squeeze(mean(handsPSD,1)));
+
+mean_ERDfoot = 100*((mean_avg_foot) - (mean_base))./ (mean_base);
+mean_ERDhand = 100*((mean_avg_hand) - (mean_base)) ./ (mean_base);
 
 %% Plot
 muband = f_map(8):f_map(14);
@@ -66,22 +87,22 @@ f_name = {'8-12','12-14','12-16','16-20','20-28'};
 
 for i = 1 : length(frequency_set)
     
-    ERDfeet_f_interest = squeeze(mean(mean_ERD_feet(frequency_set{i},:),1));
-    ERDhands_f_interest = squeeze(mean(mean_ERD_hands(frequency_set{i},:),1));
+    ERDfoot_f_interest = squeeze(mean(mean_ERDfoot(frequency_set{i},:),1));
+    ERDhand_f_interest = squeeze(mean(mean_ERDhand(frequency_set{i},:),1));
     
-    concatenated = [ERDfeet_f_interest;ERDhands_f_interest];
+    concatenated = [ERDfoot_f_interest;ERDhand_f_interest];
     minimum = min(concatenated(:));
     maximum = max(concatenated(:));
     minmax = [minimum,maximum];
     
     figure('Name',['Topoplot_',params.subject,params.sfilter,'_',f_name{i}],'pos',[0 0 1920 1080]) 
     subplot(1,2,1)
-    topoplot(ERDfeet_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDfoot_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
     title('Both Feet')
     
     subplot(1,2,2)
-    topoplot(ERDhands_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDhand_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
     title('Both Hands')
     

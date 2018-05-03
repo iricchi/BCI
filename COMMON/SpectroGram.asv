@@ -105,7 +105,7 @@ suptitle('Hands normalized')
 
 %plot without normalization
 
-figure('Name',['Spectrogram_',subject,sfilter,'_Feet_NOT_Normalized'],'pos',[0,0,1920,1080])
+figure('Name',['Spectrogram',subject,'Feet_NOT_Normalized'],'pos',[0,0,1920,1080])
 subplot(3,5,1);
 limits = plot_spectrogram(avg_feet_trial, 2 , params, 'logOn');
 title(['PSDFeet ch: ', num2str(2)]);
@@ -117,7 +117,7 @@ for ch = 3:params.nCh
 end
 suptitle('Feet NOT normalized')
 
-figure('Name',['Spectrogram_',subject,sfilter,'_Hands_NOT_Normalized'],'pos',[0,0,1920,1080])
+figure('Name',['Spectrogram',subject,'HandsNOTNormalized'],'pos',[0,0,1920,1080])
 
 for ch = 2:params.nCh
     subplot(3,5,ch-1);
@@ -125,7 +125,5 @@ for ch = 2:params.nCh
     title(['PSDHands ch: ', num2str(ch)]);
 end
 suptitle('Hands NOT normalized')
-
-%% Save all figures
 
 saveAllFigures()
