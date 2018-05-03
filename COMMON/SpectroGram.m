@@ -3,7 +3,7 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 subject = 'Anon';
-
+sfilter = 'Lap'; 
 %% Defining event types
 global cueType
 
@@ -27,7 +27,7 @@ load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
 
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, '_PSDOffline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject,sfilter, '_PSDOffline.mat']));
 
 PSDoff = psdOfflinestruct.psd;
 flags  = psdOfflinestruct.flags;
@@ -91,7 +91,7 @@ for ch = 3:params.nCh
     plot_spectrogram(avg_feet_trial_n, ch, params, 'logOff', limits );
     title(['PSDFeet norm ch: ', num2str(ch)]);
 end
-suptitle('Feet normalized')
+suptitle([subject ,' Feet normalized', '(', sfilter, ')'])
 
 figure('Name',['Spectrogram',subject,'HandsNormalized'])
 
@@ -100,7 +100,7 @@ for ch = 2:params.nCh
     plot_spectrogram(avg_hands_trial_n, ch, params,'logOff', limits );
     title(['PSDHands norm ch: ', num2str(ch)]);
 end
-suptitle('Hands normalized')
+suptitle([subject ,' Hands normalized', '(', sfilter, ')'])
 
 
 %plot without normalization
@@ -115,7 +115,7 @@ for ch = 3:params.nCh
     plot_spectrogram(avg_feet_trial, ch, params, 'logOn' , limits);
     title(['PSDFeet ch: ', num2str(ch)]);
 end
-suptitle('Feet NOT normalized')
+suptitle([subject ,' Feet NOT normalized', '(', sfilter, ')'])
 
 figure('Name',['Spectrogram',subject,'HandsNOTNormalized'])
 
@@ -124,6 +124,6 @@ for ch = 2:params.nCh
     plot_spectrogram(avg_hands_trial, ch, params, 'logOn' , limits);
     title(['PSDHands ch: ', num2str(ch)]);
 end
-suptitle('Hands NOT normalized')
+suptitle([subject ,' Hands NOT normalized', '(', sfilter, ')'])
 
 saveAllFigures()
