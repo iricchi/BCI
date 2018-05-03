@@ -17,9 +17,9 @@ function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_
 
         case 'Lap'
             for i = 1:numel(signals)
-                disp(['Filtering run n. : ', i]);
+                disp(['Filtering run n. : ', num2str(i)]);
                 for j = 1 : length(signals{i})
-                    filtered_signals{i}(j,:) = signals{i}(j,:)*laplacian_matrix;
+                    filtered_signals{i}(j,:) = signals{i}(j,:) * laplacian_matrix;
                 end
             end
             

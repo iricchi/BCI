@@ -49,7 +49,7 @@ sampleRate = h_offline{1}.SampleRate;
 
 %% SPATIAL FILTERING
 
-psdParam.sfilter = 'Lap' ; % Lap, BigLap
+psdParam.sfilter = 'Lap' ; % CAR, Lap
 
 signals_offline = spatialFilter( signals_offline, psdParam.sfilter, lap );
 signals_online  = spatialFilter( signals_online , psdParam.sfilter, lap );
