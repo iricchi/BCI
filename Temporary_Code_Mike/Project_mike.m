@@ -1,4 +1,4 @@
-clear all 
+% clear all 
 close all
 clc
 
@@ -27,16 +27,16 @@ BOOM_HIT = hex2dec('382');
 patient_name =  'Mike';
 
 %ANONYMOUS
-% filename{1} = 'anonymous.20170613.161402.offline.mi.mi_bhbf.gdf';
+% filename{3} = 'anonymous.20170613.161402.offline.mi.mi_bhbf.gdf';
 % filename{2} = 'anonymous.20170613.162331.offline.mi.mi_bhbf.gdf';
-% filename{3} = 'anonymous.20170613.162934.offline.mi.mi_bhbf.gdf';
+% filename{1} = 'anonymous.20170613.162934.offline.mi.mi_bhbf.gdf';
 % filename{4} = 'anonymous.20170613.170929.online.mi.mi_bhbf.ema.gdf'; % this
 %is online 
 
 %MICHAEL
-filename{1} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
-filename{2} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
-filename{3} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
+filename{2} = 'aj3.20180313.114946.offline.mi.mi_bhbf.gdf';
+filename{3} = 'aj3.20180313.114118.offline.mi.mi_bhbf.gdf';
+filename{1} = 'aj3.20180313.113110.offline.mi.mi_bhbf.gdf';
 
 %FLAVIO
 % filename{1} = 'aj4.20180313.151634.offline.mi.mi_bhbf.gdf';
@@ -193,8 +193,8 @@ mean_A_hand = squeeze(mean(A_hand));
 
 mean_R = squeeze(mean(R));
 
-mean_ERD_foot = 100*((log10(mean_A_foot) - log10(mean_R)))./ (mean_R);
-mean_ERD_hand = 100*(log10(mean_A_hand) - log10(mean_R))./ (mean_R);
+mean_ERD_foot2 = 100*((log10(mean_A_foot) - log10(mean_R)))./ (mean_R);
+mean_ERD_hand2 = 100*(log10(mean_A_hand) - log10(mean_R))./ (mean_R);
 
 ERD_foot_interest = mean_ERD_foot(1:5,:);
 ERD_hand_interest = mean_ERD_hand(1:5,:);
@@ -214,9 +214,9 @@ maximum = max(whole(:));
 
 
 figure
-topoplot(for_topoplotF,chanlocs16,'electrodes','labels');
+topoplot(for_topoplotF,chanlocs16,'maplimits',[minimum maximum],'electrodes','labels');
 figure
-topoplot(for_topoplotH,chanlocs16,'electrodes','labels');
+topoplot(for_topoplotH,chanlocs16,'maplimits',[minimum maximum],'electrodes','labels');
 
 % figure
 % topoplot(for_topoplotH - for_topoplotF,chanlocs16,'maplimits','maxmin','electrodes','labels');

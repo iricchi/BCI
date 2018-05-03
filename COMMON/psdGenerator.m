@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Anon';
+subject = 'Mike';
 
 %% Defining event types
 global cueType
@@ -49,15 +49,15 @@ sampleRate = h_offline{1}.SampleRate;
 
 %% SPATIAL FILTERING
 
-psdParam.sfilter = 'CAR' ; % Lap, BigLap
+psdParam.sfilter = 'Lap' ; % Lap, BigLap
 
-signals_offline = spatialFilter( signals_offline, psdParam.sfilter );
-signals_online  = spatialFilter( signals_online , psdParam.sfilter );
+signals_offline = spatialFilter( signals_offline, psdParam.sfilter, lap );
+signals_online  = spatialFilter( signals_online , psdParam.sfilter, lap );
 
 
 %% Power Spectral Density PSD - pwelch
 
-psdParam.subject = subject;
+psdParam.subject    = subject;
 psdParam.sampleRate = sampleRate;
 psdParam.nCh        = length(chanlocs16);
 psdParam.duration   = 1;                                %lenght of windows in seconds
@@ -90,8 +90,8 @@ psdOnlinestruct.psd = psdSignalsOnline;
 psdOnlinestruct.params = psdParam;
 psdOnlinestruct.flags = flagOnline;
 
-save(fullfile(parent_folder, '\SavedPSD\',[subject,'_PSDOffline.mat']), 'psdOfflinestruct');
-save(fullfile(parent_folder, '\SavedPSD\',[subject,'_PSDOnline.mat']), 'psdOnlinestruct');
+save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOffline.mat']), 'psdOfflinestruct');
+save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOnline.mat']), 'psdOnlinestruct');
 
 
 

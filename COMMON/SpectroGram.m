@@ -81,7 +81,7 @@ avg_feet_n     = (avg_feet     - avg_fixation_m)./avg_fixation_std;
 avg_hands_trial_n = cat(1,avg_fixation_n,avg_hands_n);
 avg_feet_trial_n  = cat(1,avg_fixation_n,avg_feet_n );
 
-figure()
+figure('Name',['Spectrogram',subject,'FeetNormalized'])
 subplot(3,5,1);
 limits = plot_spectrogram(avg_feet_trial_n, 2 , params, 'logOff');
 title(['PSDFeet norm ch: ', num2str(2)]);
@@ -91,19 +91,21 @@ for ch = 3:params.nCh
     plot_spectrogram(avg_feet_trial_n, ch, params, 'logOff', limits );
     title(['PSDFeet norm ch: ', num2str(ch)]);
 end
+suptitle('Feet normalized')
 
-figure()
+figure('Name',['Spectrogram',subject,'HandsNormalized'])
 
 for ch = 2:params.nCh
     subplot(3,5,ch-1);
     plot_spectrogram(avg_hands_trial_n, ch, params,'logOff', limits );
     title(['PSDHands norm ch: ', num2str(ch)]);
 end
+suptitle('Hands normalized')
 
 
 %plot without normalization
 
-figure()
+figure('Name',['Spectrogram',subject,'FeetNOTNormalized'])
 subplot(3,5,1);
 limits = plot_spectrogram(avg_feet_trial, 2 , params, 'logOn');
 title(['PSDFeet ch: ', num2str(2)]);
@@ -113,12 +115,15 @@ for ch = 3:params.nCh
     plot_spectrogram(avg_feet_trial, ch, params, 'logOn' , limits);
     title(['PSDFeet ch: ', num2str(ch)]);
 end
+suptitle('Feet NOT normalized')
 
-figure()
+figure('Name',['Spectrogram',subject,'HandsNOTNormalized'])
 
 for ch = 2:params.nCh
     subplot(3,5,ch-1);
     plot_spectrogram(avg_hands_trial, ch, params, 'logOn' , limits);
     title(['PSDHands ch: ', num2str(ch)]);
 end
+suptitle('Hands NOT normalized')
 
+saveAllFigures()
