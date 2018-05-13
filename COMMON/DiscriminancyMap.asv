@@ -146,10 +146,19 @@ for k = 1:numel(f)
     feature_f(k,:) = log(feet(:,f(k),ch(k)));
     
     figure
-    histogram(feature_h(k,:))
-    hold on
-    histogram(feature_f(k,:))
+%     histfit(feature_h(k,:))
+%     hold on
+%     histfit(feature_f(k,:))
+   
+    [m,s] = normfit(feature_h(k,:));
+    y = normpdf(,m,s);
+    plot(x,y,'.');
     
 end
 
-[~,~,~,H,F]=canoncorr(feature_h',feature_f(:,1:end-2)');
+% [~,~,~,H,F]=canoncorr(feature_h',feature_f(:,1:end-2)');
+% 
+% figure
+% histfit(H(:,1)')
+% hold on
+% histfit(F(:,1)')

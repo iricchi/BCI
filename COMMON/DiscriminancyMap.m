@@ -149,12 +149,21 @@ for k = 1:numel(f)
     histogram(feature_h(k,:))
     hold on
     histogram(feature_f(k,:))
+   
+    figure
+    [m,s] = normfit(feature_h(k,:));
+    y = normpdf(feature_h(k,:),m,s);
+    plot(feature_h(k,:),y,'.');
+    hold on
+    [m,s] = normfit(feature_f(k,:));
+    y = normpdf(feature_f(k,:),m,s);
+    plot(feature_f(k,:),y,'.');
     
 end
 
-% [~,~,~,H,F]=canoncorr(feature_h',feature_f(:,1:end-2)');
-% 
-% figure
-% histfit(H(:,1)')
-% hold on
-% histfit(F(:,1)')
+[~,~,~,H,F]=canoncorr(zscore(feature_h'),zscore(feature_f(:,1:end-2)'));
+
+figure
+histogram(H(:,1)')
+hold on
+histogram(F(:,1)')
