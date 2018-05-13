@@ -40,10 +40,10 @@ f_map = params.f_map;
 
 %% Extraction
 for i = 1:length(unique(flags.runs))
-    PSD_hand_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.CUEH |...
+    PSD_hand_run{i} = log10(PSDoff(flags.runs == i & (flags.cues == cueType.CUEH |...
         flags.cues == cueType.FEED_H),:,:));
     
-    PSD_foot_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.CUEF |...
+    PSD_foot_run{i} = log10(PSDoff(flags.runs == i & (flags.cues == cueType.CUEF |...
         flags.cues == cueType.FEED_F),:,:));
     
     PSD_flattened_foot{i} = reshape(PSD_foot_run{i},size(PSD_foot_run{i},1),...
@@ -53,8 +53,8 @@ for i = 1:length(unique(flags.runs))
         size(PSD_hand_run{i},2)*size(PSD_hand_run{i},3));
     
     data{i} = [PSD_flattened_foot{i};PSD_flattened_hand{i}];
-    label{i} = [ones(length(PSD_flattened_foot{i}),1);...
-        2*ones(length(PSD_flattened_hand{i}),1)];
+    label{i} = [repmat(("feet),length(PSD_flattened_foot{i}),1);...
+        repmat(cell('hands'),length(PSD_flattened_hand{i}),1)];
     
     [ranking{i},score{i}] = rankfeat(data{i}, label{i}, 'fisher');
     
@@ -133,6 +133,9 @@ xticks([5 10 15])
 xticklabels({'12','22','32'})
 
 [f, ch] = find(selectedFeats ~= 0);
+features_selected = length(f_map).*(ch-1) + f;
+
+save(fullfile(parent_folder, '\SavedPSD\',[subject,params.sfilter,'_features.mat']), 'features_selected');
 
 %% Sample extraction
 
@@ -152,4 +155,9 @@ for k = 1:numel(f)
     
 end
 
-[~,~,~,H,F]=canoncorr(feature_h',feature_f(:,1:end-2)');
+% [~,~,~,H,F]=canoncorr(feature_h',feature_f(:,1:end-2)');
+% 
+% figure
+% histfit(H(:,1)')
+% hold on
+% histfit(F(:,1)')

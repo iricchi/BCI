@@ -92,6 +92,3 @@ psdOnlinestruct.flags = flagOnline;
 
 save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOffline.mat']), 'psdOfflinestruct');
 save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOnline.mat']), 'psdOnlinestruct');
-
-
-

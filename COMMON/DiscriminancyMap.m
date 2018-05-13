@@ -40,10 +40,10 @@ f_map = params.f_map;
 
 %% Extraction
 for i = 1:length(unique(flags.runs))
-    PSD_hand_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.CUEH |...
+    PSD_hand_run{i} = log10(PSDoff(flags.runs == i & (flags.cues == cueType.CUEH |...
         flags.cues == cueType.FEED_H),:,:));
     
-    PSD_foot_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.CUEF |...
+    PSD_foot_run{i} = log10(PSDoff(flags.runs == i & (flags.cues == cueType.CUEF |...
         flags.cues == cueType.FEED_F),:,:));
     
     PSD_flattened_foot{i} = reshape(PSD_foot_run{i},size(PSD_foot_run{i},1),...
@@ -133,6 +133,10 @@ xticks([5 10 15])
 xticklabels({'12','22','32'})
 
 [f, ch] = find(selectedFeats ~= 0);
+
+features_selected = length(f_map).*(ch-1) + f;
+
+save(fullfile(parent_folder, '\Features\',[subject,params.sfilter,'_features.mat']), 'features_selected');
 
 %% Sample extraction
 
