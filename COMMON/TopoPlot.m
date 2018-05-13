@@ -78,12 +78,12 @@ for i = 1 : length(frequency_set)
     
     figure('Name',['Topoplot_',params.subject,params.sfilter,'_',f_name{i}],'pos',[0 0 1920 1080]) 
     subplot(1,2,1)
-    topoplot(ERDfeet_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDfeet_f_interest,chanlocs16,'maplimits',minmax,'electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
     title('Both Feet')
     
     subplot(1,2,2)
-    topoplot(ERDhands_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDhands_f_interest,chanlocs16,'maplimits',minmax,'electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
     title('Both Hands')
     

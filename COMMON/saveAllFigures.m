@@ -6,7 +6,7 @@ function [] = saveAllFigures()
     
     for iFig = 1:length(FigList)
       
-        FigHandle = FigList(iFig);
+      FigHandle = FigList(iFig);
       FigName   = get(FigHandle, 'Name');
       
       saveas(FigHandle,[FolderName,'\',FigName,'.png']);
