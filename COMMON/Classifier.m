@@ -54,7 +54,7 @@ end
 
 %% Loading features selection
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_features.mat']));
+load(fullfile(parent_folder, 'Features', [subject, sfilter, '_features.mat']));
 %clearvars -except data label f_map features_selected
 
 %% 
@@ -71,6 +71,12 @@ feet = find(label_selected ==1);
 hands = find(label_selected ==2);
 
 classifier = fitcdiscr(data_selected,label_selected);
+%%
+
+save(fullfile(parent_folder, 'Features', [subject, sfilter, '_classifier.mat']),'classifier');
+
+
+%%
 [prediction,postprob] = predict(classifier,test_selected);
 
 error = length(find(prediction ~= label{3}))/length(label{3});
