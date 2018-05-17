@@ -70,8 +70,8 @@ test_selected = data{3}(:,features_selected);
 feet = find(label_selected ==1);
 hands = find(label_selected ==2);
 
-classifier = fitcdiscr(log10(data_selected),label_selected);
-%% Projection onto canonical space
+classifier = fitcdiscr(data_selected,label_selected);
+%%
 
 m1 = classifier.Mu(1,:);
 m2 = classifier.Mu(2,:);
@@ -88,16 +88,15 @@ figure()
 [m,s] = normfit(y_feet);
 y = normpdf(x,m,s);
 plot(x,y,'b');
-%hold on 
-%histogram(y_feet,30,'Facecolor','b');
+hold on 
+histogram(y_feet,30,'Facecolor','b');
 hold on 
 [m,s] = normfit(y_hands);
 y = normpdf(x,m,s);
 plot(x,y,'r');
-%hold on 
-%histogram(y_hands,30,'Facecolor','r');
+hold on 
+histogram(y_hands,30,'Facecolor','r');
 
-%%
 save(fullfile(parent_folder, 'Features', [subject, sfilter, '_classifier.mat']),'classifier');
 
 
