@@ -31,9 +31,24 @@ cueType.FEED_F = hex2dec('30f');
 cueType.BOOM_MISS = hex2dec('381');
 cueType.BOOM_HIT = hex2dec('382');
 
+%% Preparing the support struct
+
+support.classifier = classifier;
+support.f_interest = features.frequencies;
+support.channels = features.channels;
+support.selected_features = features.selected;
+support.alpha = 0.5;
+
+
+support.lapmatrix = lap;
+support.sfilter = 'Lap';
+support.sampleRate = 512;
+support.overlap = 32;
+
 %% getting files of the subject
 
 [ offline_names, online_names ] = getFileNamesFromDir( subject , parent_folder);
+
 
 %% Extracting signals from files
 
@@ -58,18 +73,18 @@ sampleRate = h_offline{1}.SampleRate;
 
 signal_interest_hand  = signals(flag.runs == 3 & flag.cues == cueType.FEED_H,:);
 
-% init = tic;
-% postprob = myclassifier(signal_interest_hand(1:512,:),classifier,'Lap',lap,features_selected);
-% duration = toc(init);
-
-%%
 n_windows = ceil(length(signal_interest_hand)/512);
 post = zeros(ceil(length(signal_interest_hand)/512),1);
 duration = zeros(ceil(length(signal_interest_hand)/512),1);
+previous = [0.5,0.5];
+decision = zeros(ceil(length(signal_interest_hand)/512),2);
+post = zeros(ceil(length(signal_interest_hand)/512),2);
 
 for i = 1:n_windows-2
+    
     init = tic;
-    post(i) = myclassifier(signal_interest_hand(512*i:512*(i+1),:),classifier,'Lap',lap,features_selected);
+    [previous,post(i,:)]= myclassifier(signal_interest_hand(512*i:512*(i+1),:),previous,support);
     duration(i)= toc(init);
+    decision(i,:) = previous;
 end
 mean(duration)

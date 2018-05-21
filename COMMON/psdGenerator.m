@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Mike';
+subject = 'Ilaria';
 
 %% Defining event types
 global cueType

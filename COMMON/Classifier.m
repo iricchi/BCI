@@ -55,6 +55,7 @@ end
 %% Loading features selection
 
 load(fullfile(parent_folder, 'Features', [subject, sfilter, '_features.mat']));
+features_selected = features.selected;
 %clearvars -except data label f_map features_selected
 
 %% 
@@ -70,13 +71,13 @@ test_selected = data{3}(:,features_selected);
 feet = find(label_selected ==1);
 hands = find(label_selected ==2);
 
-classifier = fitcdiscr(log10(data_selected),label_selected);
+classifier = fitcdiscr(data_selected,label_selected);
 %% Projection onto canonical space
 
 m1 = classifier.Mu(1,:);
 m2 = classifier.Mu(2,:);
 
-w = inv(classifier.Sigma)*(m1-m2)';
+w = (classifier.Sigma)\(m1-m2)';
 
 y = w'*data_selected';
 

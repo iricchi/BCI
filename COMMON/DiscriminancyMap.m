@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Mike';
+subject = 'Ila';
 sfilter = 'Lap' ;
 %% Defining event types
 global cueType
@@ -133,10 +133,11 @@ xticks([5 10 15])
 xticklabels({'12','22','32'})
 
 [f, ch] = find(selectedFeats ~= 0);
+features.frequencies = (f)*2 +2;
+features.channels = (ch);
+features.selected = length(f_map)*(ch-1) +f;
 
-features_selected = length(f_map).*(ch-1) + f;
-
-save(fullfile(parent_folder, '\Features\',[subject,params.sfilter,'_features.mat']), 'features_selected');
+save(fullfile(parent_folder, '\Features\',[subject,params.sfilter,'_features.mat']), 'features');
 
 %% Sample extraction
 
