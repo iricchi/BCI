@@ -2,8 +2,8 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Ila';
-sfilter = 'Lap' ;
+subject = 'Mike';
+sfilter = 'CAR' ;
 %% Defining event types
 global cueType
 
@@ -27,11 +27,11 @@ load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
 
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
 
-PSDoff = psdOfflinestruct.psd;
-flags  = psdOfflinestruct.flags;
-params = psdOfflinestruct.params;
+PSDoff = psdOnlinestruct.psd;
+flags  = psdOnlinestruct.flags;
+params = psdOnlinestruct.params;
 
 clear psdOfflinestruct
 
@@ -75,7 +75,7 @@ runNumbers = unique(flags.runs);
 
 figure()
 for i = 1:length(unique(flags.runs))
-    subplot(2,length(map_reshaped),i);
+    subplot(ceil((length(map_reshaped)+3)/3),3,i);
     colormap jet
     imagesc(map_reshaped{i}')
     xlabel('Frequency (Hz)')
@@ -87,7 +87,7 @@ end
 
 meanFeat = mean(fullMat,3);
 
-subplot(2,length(map_reshaped),4);
+subplot(ceil((length(map_reshaped)+3)/3),3,length(map_reshaped)+1);
 colormap jet
 imagesc(meanFeat')
 xlabel('Frequency (Hz)')
@@ -101,7 +101,7 @@ deviation = 2.5;
 
 suggestedFeats = floor(meanFeat./(deviation*std2(meanFeat)));
 
-subplot(2,length(map_reshaped),5);
+subplot(ceil((length(map_reshaped)+3)/3),3,length(map_reshaped)+2);
 colormap jet
 imagesc(suggestedFeats')
 xlabel('Frequency (Hz)')
@@ -122,7 +122,7 @@ else
     selectedFeats(sub2ind(size(selectedFeats),px',py')) = 1;
 end
 
-subplot(2,length(map_reshaped),6);
+subplot(ceil((length(map_reshaped)+3)/3),3,length(map_reshaped)+3);
 colormap jet
 imagesc(selectedFeats')
 xlabel('Frequency (Hz)')
