@@ -3,7 +3,7 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 subject = 'Mike';
-sfilter = 'Lap' ;
+sfilter = 'CAR' ;
 %% Defining event types
 global cueType
 
@@ -166,9 +166,3 @@ for k = 1:numel(f)
     
 end
 
-%[~,~,~,H,F]=canoncorr(zscore(feature_h'),zscore(feature_f(:,1:end-2)'));
-% 
-% figure
-% histogram(H(:,1)')
-% hold on
-% histogram(F(:,1)')

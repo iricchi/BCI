@@ -17,7 +17,7 @@ PSD = pwelch(EEG(:,support.channels), size(EEG,1) ,support.overlap,support.f_int
 % f_map = containers.Map(unique(support.f_interest),1:length(unique(support.f_interest)));
 % ch_map = containers.Map(unique(support.channels),1:length(unique(support.channels)));
 
-[~,curr_rawprobs] = predict(support.classifier,diag(PSD)');
+[~,curr_rawprobs] = predict(support.classifier,log10(diag(PSD)'));
 curr_decision = support.alpha*curr_rawprobs + previous*(1-support.alpha);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
