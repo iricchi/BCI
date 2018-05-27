@@ -3,7 +3,7 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 subject = 'Mike';
-sfilter = 'Lap' ;
+sfilter = 'Lap ' ;
 %% Defining event types
 global cueType
 
@@ -25,11 +25,11 @@ addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
 
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
 
-PSDoff = psdOfflinestruct.psd;
-flags  = psdOfflinestruct.flags;
-params = psdOfflinestruct.params;
+PSDoff = psdOnlinestruct.psd;
+flags  = psdOnlinestruct.flags;
+params = psdOnlinestruct.params;
 
 clear psdOfflinestruct
 
@@ -61,12 +61,12 @@ features_selected = features.selected;
 %% 
 data_selected = [];
 label_selected = [];
-for i = 1:2
+for i = 1:length(unique(flags.runs))-1
     data_selected = [data_selected;data{i}(:,features_selected)];
     label_selected = [label_selected;label{i}];
 end
 
-test_selected = data{3}(:,features_selected);
+test_selected = data{end}(:,features_selected);
 
 feet = find(label_selected ==1);
 hands = find(label_selected ==2);
@@ -105,4 +105,31 @@ save(fullfile(parent_folder, 'Features', [subject, sfilter, '_classifier.mat']),
 %%
 [prediction,postprob] = predict(classifier,test_selected);
 
-error = length(find(prediction ~= label{3}))/length(label{3});
+error = length(find(prediction ~= label{end}))/length(label{end});
+
+%% Rolling crossvalidation 
+
+for i = 1:length(unique(flags.runs))
+    
+    PSD_hand_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.FEED_H),:,:));
+
+    PSD_foot_run{i} = (PSDoff(flags.runs == i & (flags.cues == cueType.FEED_F),:,:));
+
+    PSD_flattened_foot{i} = reshape(PSD_foot_run{i},size(PSD_foot_run{i},1),...
+        size(PSD_foot_run{i},2)*size(PSD_foot_run{i},3)); %flattens the 3D matrix
+
+    PSD_flattened_hand{i} = reshape(PSD_hand_run{i},size(PSD_hand_run{i},1),...
+        size(PSD_hand_run{i},2)*size(PSD_hand_run{i},3));
+
+    data{i} = [PSD_flattened_foot{i};PSD_flattened_hand{i}];
+    label{i} = [ones(size(PSD_flattened_foot{i},1),1);...
+        2*ones(size(PSD_flattened_hand{i},1),1)];
+end
+%% 
+for i = 1 : length(data)-1
+    
+    train =
+    test = data{i}+1;
+    
+end
+    

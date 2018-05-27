@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Ilaria';
+subject = 'Mike';
 
 %% Defining event types
 global cueType
@@ -49,7 +49,7 @@ sampleRate = h_offline{1}.SampleRate;
 
 %% SPATIAL FILTERING
 
-psdParam.sfilter = 'Lap' ; % CAR, Lap
+psdParam.sfilter = 'CAR' ; % CAR, Lap
 
 signals_offline = spatialFilter( signals_offline, psdParam.sfilter, lap );
 signals_online  = spatialFilter( signals_online , psdParam.sfilter, lap );

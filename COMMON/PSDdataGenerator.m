@@ -31,6 +31,7 @@ function [ psdSignals, flag ] = PSDdataGenerator( PSD, h, overlap )
             end
 
             flags(newpos(k):newpos(k)+newdur(k)) = type;
+            flags = flags(1:size(PSD{i},1));
         end
 
         flag.cues = [flag.cues; flags];
