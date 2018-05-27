@@ -77,7 +77,7 @@ classifier = fitcdiscr(data_selected,label_selected);
 m1 = classifier.Mu(1,:);
 m2 = classifier.Mu(2,:);
 
-w = (classifier.Sigma)\(m1-m2)';
+w = (classifier.Sigma)\(m1-m2)'; %check the formula
 
 y = w'*data_selected';
 

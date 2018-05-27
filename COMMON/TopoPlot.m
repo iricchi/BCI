@@ -3,8 +3,8 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 
-subject = 'Anon';
-sfilter = 'Lap';
+subject = 'Mike';
+sfilter = '';
 
 %% Defining event types
 global cueType
@@ -29,11 +29,11 @@ load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
 
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
 
-PSDoff = psdOfflinestruct.psd;
-flags  = psdOfflinestruct.flags;
-params = psdOfflinestruct.params;
+PSDoff = psdOnlinestruct.psd;
+flags  = psdOnlinestruct.flags;
+params = psdOnlinestruct.params;
 
 clear psdOfflinestruct
 
@@ -92,4 +92,4 @@ for i = 1 : length(frequency_set)
 end
 
 %% Save the figures
-saveAllFigures()
+%saveAllFigures()
