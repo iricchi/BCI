@@ -15,8 +15,8 @@ addpath(genpath([parent_folder, '\eeglab13_4_4b']));
 load([parent_folder, '\VariousData','\channel_location_16_10-20_mi.mat']);
 load([parent_folder, '\VariousData','\laplacian_16_10-20_mi.mat']);
 
-load(fullfile(parent_folder, 'Features', [subject, sfilter, '_features.mat']));
-load(fullfile(parent_folder, 'Features', [subject, sfilter, '_classifier.mat']));
+load(fullfile(parent_folder, 'Features', [subject, sfilter, '_features_all.mat']));
+% load(fullfile(parent_folder, 'Features', [subject, sfilter, '_classifier_all_diaglinear.mat']));
 
 
 %% Defining event types
@@ -37,7 +37,7 @@ support.classifier = classifier;
 support.f_interest = features.frequencies;
 support.channels = features.channels;
 support.selected_features = features.selected;
-support.alpha = 0.5;
+support.alpha = 0.96;
 
 
 support.lapmatrix = lap;
@@ -69,22 +69,31 @@ end
 sampleRate = h_offline{1}.SampleRate;
 
 %%
-[signals, flag ] = PSDdataGenerator( signals_offline, h_offline, 1 );
+[signals, flag] = PSDdataGenerator( signals_online, h_online, 1 );
 
-signal_interest_hand  = signals(flag.runs == 3 & flag.cues == cueType.FEED_H,:);
+signal_interest_hand  = signals(flag.runs == 1 & flag.trial== 15 & flag.cues == cueType.FEED_F,:);
 
 n_windows = ceil(length(signal_interest_hand)/512);
-post = zeros(ceil(length(signal_interest_hand)/512),1);
-duration = zeros(ceil(length(signal_interest_hand)/512),1);
+% post = zeros(ceil(length(signal_interest_hand)/512),1);
+% duration = zeros(ceil(length(signal_interest_hand)/512),1);
 previous = [0.5,0.5];
-decision = zeros(ceil(length(signal_interest_hand)/512),2);
-post = zeros(ceil(length(signal_interest_hand)/512),2);
+% decision = zeros(ceil(length(signal_interest_hand)/512),2);
+% post = zeros(ceil(length(signal_interest_hand)/512),2);
 
-for i = 1:n_windows-2
+k = 1;
+j=1;
+while k < length(signal_interest_hand)-512    
     
     init = tic;
-    [previous,post(i,:)]= myclassifier(signal_interest_hand(512*i:512*(i+1),:),previous,support);
+    [previous,post(j,:)]= myclassifier(signal_interest_hand(k:k+511,:),previous,support);
     duration(i)= toc(init);
-    decision(i,:) = previous;
+    
+    decision(j,:) = previous;
+    j=j+1;
+    k = k+32;
+
 end
-mean(duration)
+
+%%
+
+save(fullfile(parent_folder, '\Features\',[subject,sfilter,'_support.mat']), 'support');

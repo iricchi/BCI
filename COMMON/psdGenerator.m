@@ -3,7 +3,7 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 subject = 'Mike';
-psdParam.sfilter = 'CAR' ; % CAR, Lap
+psdParam.sfilter = 'Lap' ; % CAR, Lap
 
 %% Defining event types
 global cueType
@@ -60,9 +60,9 @@ signals_online  = spatialFilter( signals_online , psdParam.sfilter, lap );
 psdParam.subject    = subject;
 psdParam.sampleRate = sampleRate;
 psdParam.nCh        = length(chanlocs16);
-psdParam.duration   = 1;                                %lenght of windows in seconds
+psdParam.duration   = 1;                                %length of windows in seconds
 psdParam.shift      = 0.0625;                           %shift in seconds
-psdParam.window     = sampleRate*psdParam.duration;     %lenght of win in samples
+psdParam.window     = sampleRate*psdParam.duration;     %length of win in samples
 psdParam.overlap    = psdParam.shift*sampleRate;        %shift in samples
 psdParam.f_interest = 4:2:48;                           %set of frequencies
 

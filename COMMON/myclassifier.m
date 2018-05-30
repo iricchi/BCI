@@ -11,14 +11,12 @@ switch support.sfilter
         EEG = CAR(EEG);
 end
 
-PSD = pwelch(EEG(:,support.channels), size(EEG,1) ,support.overlap,support.f_interest,support.sampleRate);
+PSD = pwelch(EEG, size(EEG,1) ,support.overlap,4:2:48,support.sampleRate);
 
+PSD_reshaped = reshape(PSD,1,size(PSD,1)*size(PSD,2));
 
-% f_map = containers.Map(unique(support.f_interest),1:length(unique(support.f_interest)));
-% ch_map = containers.Map(unique(support.channels),1:length(unique(support.channels)));
-
-[~,curr_rawprobs] = predict(support.classifier,log10(diag(PSD)'));
-curr_decision = support.alpha*curr_rawprobs + previous*(1-support.alpha);
+[~,curr_rawprobs] = predict(support.classifier,log10(PSD_reshaped(support.selected_features)));
+curr_decision = (1-support.alpha)*curr_rawprobs + previous*(support.alpha);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%% Nested Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%

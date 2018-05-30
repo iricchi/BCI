@@ -3,7 +3,7 @@ close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
 subject = 'Mike';
-sfilter = 'CAR' ;
+sfilter = 'Lap' ;
 %% Defining event types
 global cueType
 
@@ -27,11 +27,11 @@ load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
 
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
 
-PSDoff = psdOnlinestruct.psd;
-flags  = psdOnlinestruct.flags;
-params = psdOnlinestruct.params;
+PSDoff = psdOfflinestruct.psd;
+flags  = psdOfflinestruct.flags;
+params = psdOfflinestruct.params;
 
 clear psdOfflinestruct
 
