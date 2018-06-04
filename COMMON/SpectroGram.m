@@ -2,7 +2,7 @@ clear all
 close all
 clc
 %% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Anon';
+subject = 'Flavio';
 
 sfilter = 'Lap';
 
@@ -72,7 +72,7 @@ avg_feet_trial = cat(1,avg_fixation,avg_feet);
 
 %% Spectrogram
 
-%trying to standardize with respect to the fixation
+% trying to standardize with respect to the fixation
 avg_fixation_m   = mean(avg_fixation,1); 
 avg_fixation_std =  std(avg_fixation,1);
 
@@ -85,7 +85,12 @@ avg_feet_trial_n  = cat(1,avg_fixation_n,avg_feet_n );
 
 figure('Name',['Spectrogram_',subject,sfilter,'_Feet_Normalized'],'pos',[0,0,1920,1080])
 subplot(3,5,1);
-limits = plot_spectrogram(avg_feet_trial_n, 2 , params, 'logOff');
+
+limits_feet = [min(avg_feet_trial_n(:)),max(avg_feet_trial_n(:))];
+limits_hands = [min(avg_hands_trial_n(:)),max(avg_hands_trial_n(:))];
+
+limits = [min([limits_feet(1),limits_hands(1)]), max([limits_feet(2),limits_hands(2)])];
+plot_spectrogram(avg_feet_trial_n, 2 , params, 'logOff',limits);
 title(['PSDFeet norm ch: ', num2str(2)]);
 
 for ch = 3:params.nCh
@@ -104,12 +109,17 @@ for ch = 2:params.nCh
 end
 suptitle([subject ,' Hands normalized', '(', sfilter, ')'])
 
-
-%plot without normalization
+%% Plot without normalization
 
 figure('Name',['Spectrogram_',subject,sfilter,'_Feet_NOT_Normalized'],'pos',[0,0,1920,1080])
+
+limits_feet = [min(avg_feet_trial(:)),max(avg_feet_trial(:))];
+limits_hands = [min(avg_hands_trial(:)),max(avg_hands_trial(:))];
+
+limits = [min([limits_feet(1),limits_hands(1)]), max([limits_feet(2),limits_hands(2)])];
+
 subplot(3,5,1);
-limits = plot_spectrogram(avg_feet_trial, 2 , params, 'logOn');
+plot_spectrogram(avg_feet_trial, 2 , params, 'logOn',limits);
 title(['PSDFeet ch: ', num2str(2)]);
 
 for ch = 3:params.nCh

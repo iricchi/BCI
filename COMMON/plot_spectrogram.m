@@ -15,15 +15,24 @@ if  ~exist('minmax','var') || isempty(minmax)
 
 end
 
-signal = flip(signal,2);
+% signal = flip(signal,2);
 
 switch log
     case 'logOn'
-        imagesc(log10(signal(:,:,channel)'),log10(minmax));
+        pcolor(log10(signal(:,:,channel)'));
+        caxis(log10(minmax))
+        shading interp
+        colormap jet
     case 'logOff'
-        imagesc(signal(:,:,channel)',minmax);
+        pcolor(signal(:,:,channel)');
+        caxis((minmax))
+        shading interp
+        colormap jet
     otherwise
-        imagesc(log10(signal(:,:,channel)'),log10(minmax));
+        pcolor(log10(signal(:,:,channel)'));
+        caxis(log10(minmax))
+        shading interp
+        colormap jet
 end
 
 step = floor(mean(diff(PSDparams.f_interest)));
@@ -33,4 +42,5 @@ xlabel('Time (s)')
 ylabel('Frequency (Hz)');
 title(['Spectrogram Average Trial ',PSDparams.subject,' subject with ',PSDparams.sfilter,' applied'])
 xticklabels(xticks*PSDparams.shift)
-yticklabels(PSDparams.f_interest(end) - step*yticks + step)
+% yticklabels(PSDparams.f_interest(end) - step*yticks + step)
+yticklabels(step*yticks + step)

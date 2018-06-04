@@ -74,7 +74,7 @@ psdParam.f_map = containers.Map(psdParam.f_interest,1:length(psdParam.f_interest
 
 %% Generation of flags for PSDdata
 
-[ psdSignalsOffline, flagOffline ] = PSDdataGenerator( PSDoffline, h_offline, psdParam.overlap );
+% [ psdSignalsOffline, flagOffline ] = PSDdataGenerator( PSDoffline, h_offline, psdParam.overlap );
 [ psdSignalsOnline,  flagOnline  ] = PSDdataGenerator( PSDonline , h_online , psdParam.overlap );
 
 clear PSDoffline PSDonline i signals_offline signals_online h_offline h_online
@@ -82,13 +82,13 @@ clear PSDoffline PSDonline i signals_offline signals_online h_offline h_online
 
 %% Saving the data 
 
-psdOfflinestruct.psd = psdSignalsOffline;
-psdOfflinestruct.params = psdParam;
-psdOfflinestruct.flags = flagOffline;
+% psdOfflinestruct.psd = psdSignalsOffline;
+% psdOfflinestruct.params = psdParam;
+% psdOfflinestruct.flags = flagOffline;
 
 psdOnlinestruct.psd = psdSignalsOnline;
 psdOnlinestruct.params = psdParam;
 psdOnlinestruct.flags = flagOnline;
 
-save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOffline.mat']), 'psdOfflinestruct');
+% save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOffline.mat']), 'psdOfflinestruct');
 save(fullfile(parent_folder, '\SavedPSD\',[subject,psdParam.sfilter,'_PSDOnline.mat']), 'psdOnlinestruct');

@@ -1,5 +1,5 @@
 function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_matrix )
-% Apply spatial filterinfìg
+% Apply spatial filtering
 
     if ~exist('laplacian_matrix','var') && strcmp(sfilter_type , 'Lap')
         
@@ -18,9 +18,9 @@ function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_
         case 'Lap'
             for i = 1:numel(signals)
                 disp(['Filtering run n. : ', num2str(i)]);
-                for j = 1 : length(signals{i})
-                    filtered_signals{i}(j,:) = signals{i}(j,:) * laplacian_matrix;
-                end
+%                 for j = 1 : length(signals{i})
+                    filtered_signals{i} = signals{i} * laplacian_matrix;
+%                 end
             end
             
         otherwise
