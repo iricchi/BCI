@@ -26,7 +26,7 @@ addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
 %% Loading data
 
 load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline_last2.mat']));
-load(fullfile(parent_folder, 'Features', [subject, sfilter, '_support_2online_linear.mat']));
+load(fullfile(parent_folder, 'Features', [subject, sfilter, '_support_2o.mat']));
 
 PSD = psdOnlinestruct.psd;
 flags  = psdOnlinestruct.flags;
@@ -38,11 +38,11 @@ f_map = params.f_map;
 
 %%
 classifier = support.classifier;
-alpha = support.alpha;
+alpha = 0.97;
 selected_features = support.selected_features;
 
-for i = 1 : length(unique(flags.abstrial))
-    test =  PSD(flags.abstrial == i & (flags.cues == cueType.FEED_H | flags.cues==cueType.FEED_F),:,:);
+for i = 1 : length(unique(flags.abstrial(~isnan(flags.abstrial))))
+    test =  log10(PSD(flags.abstrial == i & (flags.cues == cueType.FEED_H | flags.cues==cueType.FEED_F),:,:));
     test = reshape(test,size(test,1),size(test,2)*size(test,3));
     previous = [0.5,0.5];
 
@@ -54,6 +54,20 @@ for i = 1 : length(unique(flags.abstrial))
         
     end
 end
-plot(curr_decision{40}(:,1))
-hold on
-plot(posterior{45}(:,1))
+thresh = 0.75;
+hands = 0;
+for i = 1:length(curr_decision)
+    figure
+    time = [1:size(curr_decision{i},1)]/32;
+    plot(time,curr_decision{i}(:,2))
+    hold on
+    plot(time,posterior{i}(:,2))
+    grid on
+    grid minor
+    xlabel('Time (s)')
+    hline(thresh,'','Threshold')
+    legend('Decision','PostProb')
+    if curr_decision{i}(end,2) >thresh
+        hands = hands +1;
+    end
+end
