@@ -26,7 +26,7 @@ addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
 %% Loading data
 
 load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline_last2.mat']));
-load(fullfile(parent_folder, 'Features', [subject, sfilter, '_support_2online_diaglinear.mat']));
+load(fullfile(parent_folder, 'Features', [subject, sfilter, '_support_all_linear.mat']));
 
 PSD = psdOnlinestruct.psd;
 flags  = psdOnlinestruct.flags;
@@ -38,36 +38,63 @@ f_map = params.f_map;
 
 %%
 classifier = support.classifier;
-alpha = 0.97;
+alpha = 0.94;
 selected_features = support.selected_features;
 
-for i = 1 : length(unique(flags.abstrial(~isnan(flags.abstrial))))
-    test =  log10(PSD(flags.abstrial == i & (flags.cues == cueType.FEED_H | flags.cues==cueType.FEED_F),:,:));
-    test = reshape(test,size(test,1),size(test,2)*size(test,3));
-    previous = [0.5,0.5];
-
-    for j = 1 : size(test,1)
-        [~,posterior{i}(j,:)] = predict(classifier,test(j,selected_features));
-    
-        previous = (1-alpha)*posterior{i}(j,:)+ previous *(alpha);
-        curr_decision{i}(j,:) = previous;
+%for i = 1 : length(unique(flags.abstrial(~isnan(flags.abstrial))))
+test =  log10(PSD(flags.runs ==1,:,:));
+test = reshape(test,size(test,1),size(test,2)*size(test,3));
+previous = [0.5,0.5];
+feet =[];
+hands = [];
+for j = 1 : size(test,1)
+  
         
-    end
+        if flags.cues(j)==cueType.FEED_F || flags.cues(j)==cueType.FEED_H  
+            if flags.cues(j) == cueType.FEED_F && flags.cues(j-1) ~= cueType.FEED_F
+                feet = [feet;j];
+            elseif flags.cues(j)==cueType.FEED_H && flags.cues(j-1)~= cueType.FEED_H
+                hands = [hands;j];
+            end
+                     
+            [~,posterior(j,:)] = predict(classifier,test(j,selected_features));
+            previous = (1-alpha)*posterior(j,:)+ previous *(alpha);
+            curr_decision(j,:) = previous;
+            
+        else
+            posterior(j,:) = [0.5,0.5];
+            previous = [0.5,0.5];
+            curr_decision(j,:) =previous;
+        end
+        
+       
 end
-thresh = 0.6;
-hands = 0;
-for i = 1:length(curr_decision)
-    figure
-    time = [1:size(curr_decision{i},1)]/32;
-    plot(time,curr_decision{i}(:,2))
-    hold on
-    plot(time,posterior{i}(:,2))
-    grid on
-    grid minor
-    xlabel('Time (s)')
-    hline(thresh,'','Threshold')
-    legend('Decision','PostProb')
-    if curr_decision{i}(end,2) >thresh
-        hands = hands +1;
-    end
-end
+thresh = 0.8;
+time = [1:size(curr_decision,1)]/32;
+figure
+plot(time, curr_decision(:,2));
+grid on
+grid minor
+xlabel('Time (s)');
+ylabel('Decision'),
+hline(thresh,'','Threshold hands');
+hline(1-thresh,'','Threshold feet');
+vline(hands/32,'r');
+vline(feet/32,'b');
+%legend('Decision','Hands task','Feet task')
+
+% for i = 1:length(curr_decision)
+%     figure
+%     time = [1:size(curr_decision{i},1)]/32;
+%     plot(time,curr_decision{i}(:,2))
+%     hold on
+%     plot(time,posterior{i}(:,2))
+%     grid on
+%     grid minor
+%     xlabel('Time (s)')
+%     hline(thresh,'','Threshold')
+%     legend('Decision','PostProb')
+%     if curr_decision{i}(end,2) >thresh
+%         hands = hands +1;
+%     end
+% end
