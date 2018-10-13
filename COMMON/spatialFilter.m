@@ -1,4 +1,4 @@
-function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_matrix )
+ function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_matrix )
 % Apply spatial filtering
 
     if ~exist('laplacian_matrix','var') && strcmp(sfilter_type , 'Lap')
@@ -12,15 +12,11 @@ function [ filtered_signals ] = spatialFilter( signals, sfilter_type, laplacian_
         case 'CAR'
             for i = 1:numel(signals)
                 filtered_signals{i} = bsxfun(@minus, signals{i}, mean(signals{i}, 2));
-                %signalsF{i} = signals{i} - mean(signals{i},2);
             end
 
         case 'Lap'
             for i = 1:numel(signals)
-                disp(['Filtering run n. : ', num2str(i)]);
-%                 for j = 1 : length(signals{i})
-                    filtered_signals{i} = signals{i} * laplacian_matrix;
-%                 end
+                filtered_signals{i} = signals{i} * laplacian_matrix;
             end
             
         otherwise

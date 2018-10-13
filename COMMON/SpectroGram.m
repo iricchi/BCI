@@ -1,32 +1,3 @@
-clear all
-close all
-clc
-%% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Flavio';
-
-sfilter = 'Lap';
-
-%% Defining event types
-global cueType
-
-cueType.FIX = hex2dec('312');
-cueType.CUEH = hex2dec('305');
-cueType.CUEF = hex2dec('303');
-cueType.CONT_FEED = hex2dec('30d');
-cueType.FEED_H = hex2dec('30e');
-cueType.FEED_F = hex2dec('30f');
-cueType.BOOM_MISS = hex2dec('381');
-cueType.BOOM_HIT = hex2dec('382');
-
-%% Loading functions
-parent_folder = fileparts(pwd);
-
-addpath(genpath(fullfile(parent_folder, 'biosig')));
-addpath(genpath(fullfile(parent_folder, 'eeglab_current')));
-addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
-
-load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
-
 %% Loading data
 
 load(fullfile(parent_folder, 'SavedPSD', [subject,sfilter, '_PSDOffline.mat']));
@@ -137,7 +108,3 @@ for ch = 2:params.nCh
     title(['PSDHands ch: ', num2str(ch)]);
 end
 suptitle([subject ,' Hands NOT normalized', '(', sfilter, ')'])
-
-%% Save all figures
-
-saveAllFigures()

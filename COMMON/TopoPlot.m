@@ -1,39 +1,10 @@
-clear all
-close all
-clc
-%% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-
-subject = 'Mike';
-sfilter = 'CAR';
-
-%% Defining event types
-global cueType
-
-cueType.FIX = hex2dec('312');
-cueType.CUEH = hex2dec('305');
-cueType.CUEF = hex2dec('303');
-cueType.CONT_FEED = hex2dec('30d');
-cueType.FEED_H = hex2dec('30e');
-cueType.FEED_F = hex2dec('30f');
-cueType.BOOM_MISS = hex2dec('381');
-cueType.BOOM_HIT = hex2dec('382');
-
-%% Loading functions
-parent_folder = fileparts(pwd);
-
-addpath(genpath(fullfile(parent_folder, 'biosig')));
-addpath(genpath(fullfile(parent_folder, 'eeglab_current')));
-addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
-
-load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
-
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
 
-PSDoff = psdOnlinestruct.psd;
-flags  = psdOnlinestruct.flags;
-params = psdOnlinestruct.params;
+PSDoff = psdOfflinestruct.psd;
+flags  = psdOfflinestruct.flags;
+params = psdOfflinestruct.params;
 
 clear psdOfflinestruct
 
@@ -56,7 +27,7 @@ mean_ERD_feet = computeERD(mean_feet,mean_base);
 mean_ERD_hands = computeERD(mean_hands,mean_base);
 
 %% Plot
-muband = f_map(8):f_map(14);
+muband = f_map(8):f_map(12);
 muband2 = f_map(12):f_map(14);
 
 betaband = f_map(12):f_map(16);
@@ -78,18 +49,15 @@ for i = 1 : length(frequency_set)
     
     figure('Name',['Topoplot_',params.subject,params.sfilter,'_',f_name{i}],'pos',[0 0 1920 1080]) 
     subplot(1,2,1)
-    topoplot(ERDfeet_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDfeet_f_interest,chanlocs16,'maplimits',minmax,'electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
-    title('Both Feet')
+    title('Both feet')
     
     subplot(1,2,2)
-    topoplot(ERDhands_f_interest,chanlocs16,'maplimits','maxmin','electrodes','labels','plotrad',0.3,'headrad',0.3);
+    topoplot(ERDhands_f_interest,chanlocs16,'maplimits',minmax,'electrodes','labels','plotrad',0.3,'headrad',0.3);
     colorbar
-    title('Both Hands')
+    title('Both hands')
     
     suptitle([params.subject,' in frequency band ',f_name{i},' Hz'])
     
 end
-
-%% Save the figures
-%saveAllFigures()

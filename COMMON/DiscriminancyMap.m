@@ -1,39 +1,12 @@
-clear all
-close all
-clc
-%% Choose Person --> {'Mike','Flavio','Ilaria','Anon'}
-subject = 'Anon';
-sfilter = 'Lap' ;
-%% Defining event types
-global cueType
-
-cueType.FIX = hex2dec('312');
-cueType.CUEH = hex2dec('305');
-cueType.CUEF = hex2dec('303');
-cueType.CONT_FEED = hex2dec('30d');
-cueType.FEED_H = hex2dec('30e');
-cueType.FEED_F = hex2dec('30f');
-cueType.BOOM_MISS = hex2dec('381');
-cueType.BOOM_HIT = hex2dec('382');
-
-%% Loading functions
-parent_folder = fileparts(pwd);
-
-addpath(genpath(fullfile(parent_folder, 'biosig')));
-addpath(genpath(fullfile(parent_folder, 'eeglab_current')));
-addpath(genpath(fullfile(parent_folder, 'eeglab13_4_4b')));
-
-load(fullfile(parent_folder, 'VariousData','channel_location_16_10-20_mi.mat'));
-
 %% Loading data
 
-load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOffline.mat']));
+load(fullfile(parent_folder, 'SavedPSD', [subject, sfilter, '_PSDOnline.mat']));
 
-PSDoff = psdOfflinestruct.psd;
-flags  = psdOfflinestruct.flags;
-params = psdOfflinestruct.params;
+PSDoff = psdOnlinestruct.psd;
+flags  = psdOnlinestruct.flags;
+params = psdOnlinestruct.params;
 
-clear psdOfflinestruct
+clear psdOnlinestruct
 
 f_map = params.f_map;
 
@@ -136,7 +109,7 @@ xticklabels({'12','22','32'})
 features.frequencies = (f)*2 +2;
 features.channels = (ch);
 features.selected = length(f_map)*(ch-1) +f;
-
+suptitle('Discriminancy Map')
 save(fullfile(parent_folder, '\Features\',[subject,params.sfilter,'_features.mat']), 'features');
 
 %% Sample extraction
@@ -154,6 +127,9 @@ for k = 1:numel(f)
     histogram(feature_h(k,:))
     hold on
     histogram(feature_f(k,:))
+    xlabel('Feature value')
+    ylabel('Number of samples')
+    title(['Feature n.:',num2str(features.selected(k))])
    
     figure
     [m,s] = normfit(feature_h(k,:));
@@ -163,6 +139,8 @@ for k = 1:numel(f)
     [m,s] = normfit(feature_f(k,:));
     y = normpdf(feature_f(k,:),m,s);
     plot(feature_f(k,:),y,'.');
-    
+    xlabel('Feature value')
+    ylabel('Number of samples')
+    title(['Feature n.:',num2str(features.selected(k))])
 end
 

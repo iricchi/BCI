@@ -4,7 +4,7 @@ function [ offline_names, online_names ] = getFileNamesFromDir( subject, parent_
     signal_folder_online = [parent_folder, '\Signals\online'];
     signal_folder_offline = [parent_folder, '\Signals\offline'];
 
-    subject_codes = containers.Map({'Mike','Flavio','Ilaria','Anon'}, {'aj3','aj4','aj5','anonymous'});
+    subject_codes = containers.Map({'Mike','Flavio','Ilaria','Anon','Average','IlariaRH'}, {'aj3','aj4','aj5','anonymous','avg','ajrh'});
     
     if(~subject_codes.isKey(subject))
         error('No such subject existing');
